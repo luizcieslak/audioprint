@@ -61,7 +61,7 @@ sampling = info.SampleRate;
     preX(isnan(preX)) = 0;
     
     for i=1:size(preX, 1)
-        X(i,1) = pdist2(preX(i,:),table(1).MFCCs(i,:),'euclidean');
+        X = pdist2(preX(i,:),table(1).MFCCs(i,:),'euclidean');
     end
     
     
