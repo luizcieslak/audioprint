@@ -37,7 +37,7 @@ LW2_1 = [1.3153945754343523422 -0.43795099368366552373 -0.206224805176121323 0.2
 isCellX = iscell(X);
 if ~isCellX, X = {X}; end;
 
-% Dimensions
+Dimensions
 TS = size(X,2); % timesteps
 if ~isempty(X)
     Q = size(X{1},2); % samples/series

@@ -1,5 +1,4 @@
-dataset = {'l1', 'l2', 'l3', 'p1', 'p2', 'p3', 'v1', 'v2', 'v3'};
-table = struct('name','', 'wave',.0, 'sampling',0, 'MFCCs',.0, 'line_MFCCs',.0, 'frames',.0, 'FBEs',.0, 'bits',0);
+table = struct('name','', 'wave',.0, 'sampling',0, 'MFCCs',.0, 'frames',.0, 'FBEs',.0, 'bits',0);
 
 l = dir('*.wav');
 
@@ -14,7 +13,7 @@ LF = 300;               % lower frequency limit (Hz) /300 //begin in 176 through
 HF = 3700;              % upper frequency limit (Hz) /3700
 
 
-for(i=1:length(dataset))
+for(i=1:size(l,1))
     
     %pick the name of each audio
     aux = strsplit(l(i).name, '.');
@@ -38,9 +37,6 @@ for(i=1:length(dataset))
     table(i).MFCCs = MFCCs;
     table(i).MFCCs(isnan(table(i).MFCCs))=0;
     
-    %pick the imput of the neural net
-    table(i).line_MFCCs = reshape(MFCCs, [1 , size(MFCCs, 1)*size(MFCCs, 2)]);
-    
     %pick the frames of each audio
     table(i).frames = frames;
     
@@ -52,63 +48,57 @@ for(i=1:length(dataset))
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    % Generate data needed for plotting
-    [ Nw, NF ] = size( frames );                                 % frame length and number of frames
-    time_frames = [0:NF-1]*Ts*0.001+0.5*Nw/[table(i).sampling];  % time vector (s) for frames
-    time = [ 0:length(speech)-1 ]/[table(i).sampling];           % time vector (s) for signal samples
-    logFBEs = 20*log10( FBEs );                                  % compute log FBEs for plotting
-    logFBEs_floor = max(logFBEs(:))-50;                          % get logFBE floor 50 dB below max
-    logFBEs( logFBEs<logFBEs_floor ) = logFBEs_floor;            % limit logFBE dynamic range
+%     % Generate data needed for plotting
+%     [ Nw, NF ] = size( frames );                                 % frame length and number of frames
+%     time_frames = [0:NF-1]*Ts*0.001+0.5*Nw/[table(i).sampling];  % time vector (s) for frames
+%     time = [ 0:length(speech)-1 ]/[table(i).sampling];           % time vector (s) for signal samples
+%     logFBEs = 20*log10( FBEs );                                  % compute log FBEs for plotting
+%     logFBEs_floor = max(logFBEs(:))-50;                          % get logFBE floor 50 dB below max
+%     logFBEs( logFBEs<logFBEs_floor ) = logFBEs_floor;            % limit logFBE dynamic range
+%     
+%     % Generate plots
+%     figure('Position', [30 30 800 600], 'PaperPositionMode', 'auto', ...
+%         'color', 'w', 'PaperOrientation', 'landscape', 'Visible', 'on' );
+%     
+%     subplot( 311 );
+%     plot( time, speech, 'k' );
+%     xlim( [ min(time_frames) max(time_frames) ] );
+%     xlabel( 'Time (s)' );
+%     ylabel( 'Amplitude' );
+%     title( 'Speech waveform');
+%     
+%     subplot( 312 );
+%     imagesc( time_frames, [1:M], logFBEs );
+%     axis( 'xy' );
+%     xlim( [ min(time_frames) max(time_frames) ] );
+%     xlabel( 'Time (s)' );
+%     ylabel( 'Channel index' );
+%     title( 'Log (mel) filterbank energies');
+%     
+%     subplot( 313 );
+%     imagesc( time_frames, [1:C], MFCCs(2:end,:) ); % HTK's TARGETKIND: MFCC
+%     %imagesc( time_frames, [1:C+1], MFCCs );       % HTK's TARGETKIND: MFCC_0
+%     axis( 'xy' );
+%     xlim( [ min(time_frames) max(time_frames) ] );
+%     xlabel( 'Time (s)' );
+%     ylabel( 'Cepstrum index' );
+%     title( 'Mel frequency cepstrum' );
     
-    % Generate plots
-    figure('Position', [30 30 800 600], 'PaperPositionMode', 'auto', ...
-        'color', 'w', 'PaperOrientation', 'landscape', 'Visible', 'on' );
-    
-    subplot( 311 );
-    plot( time, speech, 'k' );
-    xlim( [ min(time_frames) max(time_frames) ] );
-    xlabel( 'Time (s)' );
-    ylabel( 'Amplitude' );
-    title( 'Speech waveform');
-    
-    subplot( 312 );
-    imagesc( time_frames, [1:M], logFBEs );
-    axis( 'xy' );
-    xlim( [ min(time_frames) max(time_frames) ] );
-    xlabel( 'Time (s)' );
-    ylabel( 'Channel index' );
-    title( 'Log (mel) filterbank energies');
-    
-    subplot( 313 );
-    imagesc( time_frames, [1:C], MFCCs(2:end,:) ); % HTK's TARGETKIND: MFCC
-    %imagesc( time_frames, [1:C+1], MFCCs );       % HTK's TARGETKIND: MFCC_0
-    axis( 'xy' );
-    xlim( [ min(time_frames) max(time_frames) ] );
-    xlabel( 'Time (s)' );
-    ylabel( 'Cepstrum index' );
-    title( 'Mel frequency cepstrum' );
-    
-    % Set color map to grayscale
-    %colormap( 1-colormap('gray') );
-    
-    % Print figure to pdf and png files
-    %print('-dpdf', sprintf(strcat([table(i).name],'.pdf'), mfilename));
-    %print('-dpng', sprintf(strcat([table(i).name],'.png'), mfilename));
+%     Set color map to grayscale
+%     colormap( 1-colormap('gray') );
+%     
+%     Print figure to pdf and png files
+%     print('-dpdf', sprintf(strcat([table(i).name],'.pdf'), mfilename));
+%     print('-dpng', sprintf(strcat([table(i).name],'.png'), mfilename));
     
 end
 
 clear i
 
-% %concatenating line_MFCCs for neural net
-% line_MFCCs = cat(1, table(1:length(dataset)).line_MFCCs);
-% save('line_MFCCs.mat', 'line_MFCCs');
-
-% line_MFCCs(isnan(line_MFCCs))=0;
-
 % PEDRO'S DISTANCES
 count = 1;
-for i = 1: length(dataset)
-    for j = 1: length(dataset)
+for i = 1: size(l,1)
+    for j = 1: size(l,1)
         for z = 1:size(table(i).MFCCs, 1)
             if i>j
                 distances(z,count) = pdist2(table(j).MFCCs(z,:),table(i).MFCCs(z,:),'euclidean');
@@ -129,7 +119,7 @@ end
 input = z;
 target = z;
 z=1;
-numRecords=3; % go up
+numRecords=10; % go up
 
 % CODE FOR TARGET
 for i=1:numRecords
@@ -142,15 +132,20 @@ for i=1:numRecords
     end
 end
 
-for i=1:size(distances,1)
-    for j=1:size(distances,2)
-        if((i>j)&&(i>numRecords))
-           input(1,z)=distances(i,j);
-           target(1,z)=0;
-           z=z+1;
-        end    
+for i=1:size(distances, 2)
+    if (i>z)
+        target(1, i) = 0;
     end
 end
+% for i=1:size(distances,1)
+%     for j=1:size(distances,2)
+%         if((i>j)&&(i>numRecords))
+%            input(1,z)=distances(i,j);
+%            target(1,z)=0;
+%            z=z+1;
+%         end    
+%     end
+% end
 close all
 
 clear dataset i j l aux info Tw Ts alpha M C L LF MFCCs HF frames FBEs...
