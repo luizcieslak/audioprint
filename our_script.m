@@ -12,6 +12,7 @@ L = 22;                 % cepstral sine lifter parameter /22
 LF = 300;               % lower frequency limit (Hz) /300 //begin in 176 through the end
 HF = 3700;              % upper frequency limit (Hz) /3700
 
+numRecords = 9; % number of records of each user
 
 for(i=1:size(l,1))
     
@@ -116,16 +117,15 @@ for i=1:size(distances,1)
     z=z+i;
 end
 
-input = z;
+%input = z;
 target = z;
 z=1;
-numRecords=10; % go up
 
 % CODE FOR TARGET
 for i=1:numRecords
     for j=1:numRecords
         if(i>j)
-           input(1,z)=distances(i,j);
+           %input(1,z)=distances(i,j);
            target(1,z)=1;
            z=z+1;
         end    
@@ -137,6 +137,7 @@ for i=1:size(distances, 2)
         target(1, i) = 0;
     end
 end
+
 % for i=1:size(distances,1)
 %     for j=1:size(distances,2)
 %         if((i>j)&&(i>numRecords))
@@ -146,6 +147,7 @@ end
 %         end    
 %     end
 % end
+
 close all
 
 clear dataset i j l aux info Tw Ts alpha M C L LF MFCCs HF frames FBEs...
