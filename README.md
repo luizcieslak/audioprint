@@ -8,13 +8,15 @@ Click [here] (https://docs.google.com/document/d/19VL59InzSMcHKa_NnzqVeg8E_chuJ4
 #How to run it in MATLAB
 
 * Fork the repo and add the folder in MATLAB Path.
-* open the inputScript.m and modify the variables puting your own .wav file
+* open the inputScript.m and modify the variables puting your own .wav file:
   ```
   speech = audioread('yourfile.wav');
+  
   info = audioinfo('yourfile.wav');
   ```
 * Run the inputScript.m
-* Run the myNeuralNetFunction puting the MFCC generated as a parameter
+* Run the myNeuralNetFunction puting the MFCC generated as a parameter:
+
   ```
   myNeuralNetFunction(MFCC);
   ```
