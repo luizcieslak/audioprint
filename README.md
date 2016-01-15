@@ -26,3 +26,6 @@ The neural net output is a number between 0 and 1 and it represents the audio si
 #How to create a new Neural Net
 
 * Run the our_script.m script and create a new neural net using the [MATLAB's toolbox] (http://www.mathworks.com/help/nnet/getting-started-with-neural-network-toolbox.html)
+
+
+
